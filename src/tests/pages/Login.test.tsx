@@ -1,15 +1,13 @@
-import LoginPage from "@/pages/Login";
-import { renderWithRouter } from "../utils/utils";
 import { screen, within } from "@testing-library/react";
 import { AuthProvider } from "@/context/auth-context";
-import { Route, Routes } from "react-router-dom";
-import Profile from "@/pages/Profile";
+import { Routes } from "react-router-dom";
 import { AppRoutes } from "@/Routes";
+import { renderWithProviders } from '../utils/utils-redux'
 
 describe("Login Page", () => {
 	it("should have email and password input within a form", async () => {
 		// arrange
-		const { user } = renderWithRouter(
+		const { user } = renderWithProviders(
 			<AuthProvider>
 				<Routes>
 					{AppRoutes()}

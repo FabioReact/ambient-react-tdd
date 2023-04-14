@@ -1,9 +1,6 @@
 import "./App.css";
 import {
-	BrowserRouter,
-	Route,
 	RouterProvider,
-	Routes,
 	createBrowserRouter,
 	createRoutesFromElements,
 } from "react-router-dom";
@@ -11,7 +8,7 @@ import {
 import { AuthProvider } from "@/context/auth-context";
 import { AppRoutes } from "@/Routes";
 import { Provider } from 'react-redux';
-import { store } from '@/redux/store'
+import { setupStore } from '@/redux/store'
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -21,7 +18,7 @@ const router = createBrowserRouter(
 
 function App() {
 	return (
-		<Provider store={store}>
+		<Provider store={setupStore()}>
 			<AuthProvider>
 				<RouterProvider router={router} />
 			</AuthProvider>
