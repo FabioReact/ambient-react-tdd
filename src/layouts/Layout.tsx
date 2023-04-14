@@ -12,6 +12,9 @@ const Layout = () => {
 						<li>
 							<NavLink to="/register">Register</NavLink>
 						</li>
+						<li>
+							<NavLink to="/optimisations">Optimisations</NavLink>
+						</li>
 					</ul>
 				</nav>
 			</header>

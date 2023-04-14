@@ -9,6 +9,7 @@ import { AuthProvider } from "@/context/auth-context";
 import { AppRoutes } from "@/Routes";
 import { Provider } from 'react-redux';
 import { setupStore } from '@/redux/store'
+import { Suspense } from 'react'
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -20,7 +21,9 @@ function App() {
 	return (
 		<Provider store={setupStore()}>
 			<AuthProvider>
-				<RouterProvider router={router} />
+				<Suspense fallback={<div>Loading...</div>}>
+					<RouterProvider router={router} />
+				</Suspense>
 			</AuthProvider>
 		</Provider>
 	);

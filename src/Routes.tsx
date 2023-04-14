@@ -6,6 +6,10 @@ import Profile from "./pages/Profile";
 import LoginPage from "./pages/Login";
 import { registerUser } from "./api/user";
 import PrivateRoute from "./hoc/PrivateRoute";
+// import Optimisations from './pages/Optimisations'
+import { lazy } from 'react'
+
+const Optimisations = lazy(() => import('./pages/Optimisations'))
 
 const onRegister = (data: any) => {
 	try {
@@ -28,5 +32,6 @@ export const AppRoutes = () => (
 			}
 		/>
 		<Route path="/login" element={<LoginPage />} />
+		<Route path="/optimisations" element={<Optimisations />} />
 	</Route>
 );
