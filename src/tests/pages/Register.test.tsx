@@ -4,6 +4,7 @@ import { vi } from "vitest";
 import { renderWithRouter } from "../utils/utils";
 import Profile from "@/pages/Profile";
 import { Route, Routes } from "react-router-dom";
+import { AuthProvider } from '@/context/auth-context'
 
 describe("Register Page", () => {
 	it("should have a Register title", () => {
@@ -164,12 +165,12 @@ describe("Register Page", () => {
 	it("should redirect when submit button is clicked", async () => {
 		// arrange
 		const { getByRole, user } = renderWithRouter(
-			<>
+			<AuthProvider>
 				<Routes>
 					<Route path="/profile" element={<Profile />} />
 					<Route path="/register" element={<Register />} />
 				</Routes>
-			</>,
+			</AuthProvider>,
 			{ route: "/register" },
 		);
 

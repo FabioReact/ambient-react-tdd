@@ -1,6 +1,12 @@
+import { useAuth } from '@/context/auth-context'
+
 const Profile = () => {
+	const { token } = useAuth()
 	return (
-		<div>Profile</div>
+		<section>
+			<h1>Profile</h1>
+			<p>Token: {token}</p>
+		</section>
 	)
 }
 
