@@ -1,17 +1,27 @@
-import { AuthProvider } from '@/context/auth-context'
-import Profile from '@/pages/Profile'
-import { render, screen } from '@testing-library/react'
+import { AuthContext, AuthProvider } from "@/context/auth-context";
+import Profile from "@/pages/Profile";
+import { render, screen } from "@testing-library/react";
 
-describe('Profile Page', () => {
+describe("Profile Page", () => {
 	it("should have a title with Profile", () => {
 		// arrange
-		render(<AuthProvider><Profile /></AuthProvider>)
+		render(
+			<AuthContext.Provider
+				value={{
+					token: "secret-token",
+					login: () => null,
+					logout: () => null,
+				}}
+			>
+				<Profile />
+			</AuthContext.Provider>,
+		);
 
 		const title = screen.getByRole("heading", {
-			name: /Profile/i
-		})
-		const tokenP = screen.getByText(/secret-token/)
-		expect(tokenP).toBeInTheDocument()
-		expect(title).toBeInTheDocument()
-	})
-})
+			name: /Profile/i,
+		});
+		const tokenP = screen.getByText(/secret-token/);
+		expect(tokenP).toBeInTheDocument();
+		expect(title).toBeInTheDocument();
+	});
+});

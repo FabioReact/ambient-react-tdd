@@ -4,18 +4,35 @@ import { vi } from "vitest";
 import { renderWithRouter } from "../utils/utils";
 import Profile from "@/pages/Profile";
 import { Route, Routes } from "react-router-dom";
-import { AuthProvider } from '@/context/auth-context'
+import { AuthProvider } from "@/context/auth-context";
+import { AppRoutes } from "@/Routes";
+import { server } from '@/tests/utils/setup-server'
+
+beforeAll(() => {
+	server.listen();
+});
+afterEach(() => server.resetHandlers());
+afterAll(() => {
+	server.close();
+});
+
+
+const RegisterWithAuth = () => (
+	<AuthProvider>
+		<Register />
+	</AuthProvider>
+);
 
 describe("Register Page", () => {
 	it("should have a Register title", () => {
-		renderWithRouter(<Register />);
+		renderWithRouter(<RegisterWithAuth />);
 		const title = screen.getByRole("heading");
 		expect(title).toHaveTextContent(/Register/i);
 	});
 
 	it("should have a required input of type email", () => {
 		// arrange - Etat initial
-		renderWithRouter(<Register />);
+		renderWithRouter(<RegisterWithAuth />);
 
 		// act - Action à Effectuer
 		const emailInput: HTMLInputElement = screen.getByLabelText(/email/i);
@@ -27,7 +44,7 @@ describe("Register Page", () => {
 
 	it("should have two required inputs of type password, password and passwordConfirmation", () => {
 		// arrange - Etat initial
-		const { container } = renderWithRouter(<Register />); // ⚠️ Non recommandé
+		const { container } = renderWithRouter(<RegisterWithAuth />); // ⚠️ Non recommandé
 
 		// act - Action à Effectuer
 		const nodesPassword = container.querySelectorAll('input[type="password"]');
@@ -41,7 +58,7 @@ describe("Register Page", () => {
 
 	it("should have error message if passwords don't match", async () => {
 		// arrange - Etat initial
-		const { user } = renderWithRouter(<Register />);
+		const { user } = renderWithRouter(<RegisterWithAuth />);
 
 		// act
 		const passwordInput: HTMLInputElement =
@@ -57,7 +74,7 @@ describe("Register Page", () => {
 
 	it("should not have error message if passwords match", async () => {
 		// arrange - Etat initial
-		const { user } = renderWithRouter(<Register />);
+		const { user } = renderWithRouter(<RegisterWithAuth />);
 
 		// act
 		const passwordInput: HTMLInputElement =
@@ -76,7 +93,7 @@ describe("Register Page", () => {
 
 	it("should have input type text for firstname and lastname", () => {
 		// arrange - Etat initial
-		renderWithRouter(<Register />);
+		renderWithRouter(<RegisterWithAuth />);
 		// const user = userEvent.setup()
 
 		// act
@@ -91,7 +108,7 @@ describe("Register Page", () => {
 
 	it("should have input type url for photo", () => {
 		// arrange - Etat initial
-		renderWithRouter(<Register />);
+		renderWithRouter(<RegisterWithAuth />);
 
 		// act
 		const photoInput: HTMLInputElement = screen.getByLabelText(/photo/i);
@@ -104,7 +121,9 @@ describe("Register Page", () => {
 		// arrange
 		const onRegister = vi.fn();
 		const { getByRole, user } = renderWithRouter(
-			<Register onRegister={onRegister} />,
+			<AuthProvider>
+				<Register onRegister={onRegister} />
+			</AuthProvider>,
 		);
 
 		// act
@@ -138,7 +157,9 @@ describe("Register Page", () => {
 			return await { error: "Some error" };
 		});
 		const { getByRole, user } = renderWithRouter(
-			<Register onRegister={onRegister} />,
+			<AuthProvider>
+				<Register onRegister={onRegister} />
+			</AuthProvider>,
 		);
 
 		// act
@@ -166,10 +187,7 @@ describe("Register Page", () => {
 		// arrange
 		const { getByRole, user } = renderWithRouter(
 			<AuthProvider>
-				<Routes>
-					<Route path="/profile" element={<Profile />} />
-					<Route path="/register" element={<Register />} />
-				</Routes>
+				<Routes>{AppRoutes()}</Routes>
 			</AuthProvider>,
 			{ route: "/register" },
 		);

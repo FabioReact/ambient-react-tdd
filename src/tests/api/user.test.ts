@@ -1,13 +1,7 @@
 import { User, registerUser } from "@/api/user";
 // Mettre en place un mock de notre API grâce à msw
 import { rest } from "msw";
-import { setupServer } from "msw/node";
-
-const server = setupServer(
-	rest.post("http://localhost:4000/register", (req, res, ctx) => {
-		return res(ctx.json({ accessToken: "xxx.xxx.xxx" }));
-	}),
-);
+import { server } from '@/tests/utils/setup-server'
 
 beforeAll(() => {
 	server.listen();

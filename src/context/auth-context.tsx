@@ -1,13 +1,24 @@
-import { ReactElement, createContext, useContext } from 'react'
+import { ReactElement, createContext, useContext, useState } from 'react'
 
-const AuthContext = createContext<{
-	token: string
+export const AuthContext = createContext<{
+	token: string|null
+	login: () => void
+	logout: () => void
 }>(null!)
 
 export const AuthProvider = ({children}: {children: ReactElement}) => {
+	const [token, setToken] = useState<string|null>(null)
+	const login = () => {
+		setToken('secret-token')
+	}
+	const logout = () => {
+		setToken(null)
+	}
 	return (
 		<AuthContext.Provider value={{
-			token: 'secret-token'
+			token,
+			login,
+			logout,
 		}}>
 			{children}
 		</AuthContext.Provider>

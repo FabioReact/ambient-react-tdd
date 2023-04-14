@@ -1,4 +1,4 @@
-import { registerUser } from '@/api/user'
+import { useAuth } from '@/context/auth-context'
 import { useState } from "react";
 import { useForm, SubmitHandler  } from 'react-hook-form'
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ type Inputs = {
 const Register = ({ onRegister = ({ password }: { password: string }) => {
 	console.log(password);
 }}: RegisterProps) => {
+	const { login } = useAuth()
 	const navigate = useNavigate()
 	const { register, handleSubmit, watch } = useForm<Inputs>()
 	const [error, setError] = useState("");
@@ -35,15 +36,13 @@ const Register = ({ onRegister = ({ password }: { password: string }) => {
 
 
 	const onSubmitHandler: SubmitHandler<Inputs> = async (data) => {
-		// registerUser().then(response => {
-		// 	response.data.accessToken
-		// })
 		const response = await onRegister({
 			password: data.password || ''
 		});
 		if (response && response.error) {
 			setError(response.error);
 		}
+		login()
 		navigate('/profile')
 		// if (response.data.accessToken)
 
