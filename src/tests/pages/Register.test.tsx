@@ -1,9 +1,9 @@
 import Register from "@/pages/Register";
-import { render, screen, waitFor, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { screen, within } from "@testing-library/react";
 import { vi } from "vitest";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
 import { renderWithRouter } from "../utils/utils";
+import Profile from "@/pages/Profile";
+import { Route, Routes } from "react-router-dom";
 
 describe("Register Page", () => {
 	it("should have a Register title", () => {
@@ -163,14 +163,15 @@ describe("Register Page", () => {
 
 	it("should redirect when submit button is clicked", async () => {
 		// arrange
-		const history = ['/register'];
-
-		const { getByRole } = render(
-			<MemoryRouter initialEntries={history}>
-				<Register />
-			</MemoryRouter>,
+		const { getByRole, user } = renderWithRouter(
+			<>
+				<Routes>
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/register" element={<Register />} />
+				</Routes>
+			</>,
+			{ route: "/register" },
 		);
-		const user = userEvent.setup();
 
 		// act
 		const form = getByRole("form", {
@@ -187,14 +188,9 @@ describe("Register Page", () => {
 		await user.type(emailInput, "some@email.com");
 		await user.type(passwordInput, "password");
 		await user.type(passwordConfirmationInput, "password");
-		await user.tab()
 		await user.click(submitButton);
 
 		// assert
-		await waitFor(() => {
-			// expect(screen.getByText(/profile/i)).toBeInTheDocument();
-			// toEquel -> sert à comparer des objects/arrays
-			expect(history).toEqual(['/register', '/profile'])
-		});
+		expect(await screen.findByText(/profile/i)).toBeInTheDocument();
 	});
 });
